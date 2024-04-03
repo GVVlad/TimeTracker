@@ -7,10 +7,10 @@ import ua.hryshko.timetracker.model.entity.Task;
 
 public interface TaskService {
 
-    Task saveTask(TaskDto taskDto);
+    Task createTask(TaskDto taskDto);
     Task updateTask(UpdateTaskDto updateTaskDto);
-    void startTask(Long taskId);
-    void finishedTask(Long taskId);
+    Task startTask(Long taskId);
+    Task finishedTask(Long taskId);
     void autoClose();
     List<Task> getAllTask();
     Task getTaskById(Long taskId);
