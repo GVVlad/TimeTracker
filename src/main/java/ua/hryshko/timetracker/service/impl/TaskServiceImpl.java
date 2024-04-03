@@ -7,6 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ua.hryshko.timetracker.enums.Status;
+import ua.hryshko.timetracker.exceptions.AlreadyFinishedException;
+import ua.hryshko.timetracker.exceptions.AlreadyStartedException;
+import ua.hryshko.timetracker.exceptions.NotCorrectDataException;
+import ua.hryshko.timetracker.exceptions.TaskNotFoundException;
 import ua.hryshko.timetracker.model.dto.TaskDto;
 import ua.hryshko.timetracker.model.dto.UpdateTaskDto;
 import ua.hryshko.timetracker.model.entity.Task;
@@ -28,7 +32,7 @@ public class TaskServiceImpl implements TaskService {
             log.info("Task was successfully created: " + task);
             return task;
         } else {
-            throw new RuntimeException("Not created");
+            throw new NotCorrectDataException("Task wasn't created. Wrong input data");
         }
     }
 
@@ -55,10 +59,10 @@ public class TaskServiceImpl implements TaskService {
             updateTaskDto.getStatus() == null) {
             log.info(String.format("Task's status with id = %s nothing to update", task.getId()));
         }
-        Task updatedTask = taskRepository.save(task);
+        task = taskRepository.save(task);
 
-        log.info("Task was successfully updated: " + updatedTask);
-        return updatedTask;
+        log.info("Task was successfully updated: " + task);
+        return task;
     }
 
     @Override
@@ -72,7 +76,7 @@ public class TaskServiceImpl implements TaskService {
             log.info(String.format("Task with id = %s was started tracking at %s", task.getId(), task.getStartedAt()));
             return task;
         } else {
-            throw new RuntimeException("");
+            throw new AlreadyStartedException(String.format("Task with id= %s was already started tracking", taskId));
         }
 
     }
@@ -85,16 +89,16 @@ public class TaskServiceImpl implements TaskService {
 
             task.setFinishedAt(LocalTime.now());
             Duration duration = Duration.between(task.getStartedAt(), LocalTime.now());
-            task.setSpentTime(duration.toHours() + ":" + duration.toMinutes() + ":" + duration.toSeconds() % 60);
+            task.setSpentTime(String.format("%s:%s:%s", duration.toHours(), duration.toMinutes(), duration.toSeconds() % 60));
             task.setStatus(Status.FINISHED.getName());
 
             task = taskRepository.save(task);
-            log.info(String.format("Task with id = %s was finished tracking at %s. Time was spent: %s", task.getId(),
+            log.info(String.format("Task with id= %s tracking has been completed at %s. Time was spent: %s", task.getId(),
                 task.getStartedAt(), task.getSpentTime()));
 
             return task;
         } else {
-            throw new RuntimeException("");
+            throw new AlreadyFinishedException(String.format("Task with id= %s has already been tracked", taskId));
         }
     }
 
@@ -113,7 +117,7 @@ public class TaskServiceImpl implements TaskService {
         if(taskRepository.findById(taskId).isPresent()) {
             return taskRepository.findById(taskId).get();
         } else {
-            throw new RuntimeException("");
+            throw new TaskNotFoundException(String.format("Task with id = %s not found", taskId));
         }
     }
 
