@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ua.hryshko.timetracker.enums.Status;
 import ua.hryshko.timetracker.exceptions.AlreadyFinishedException;
@@ -18,6 +19,7 @@ import ua.hryshko.timetracker.model.mapper.TaskMapper;
 import ua.hryshko.timetracker.repository.TaskRepository;
 import ua.hryshko.timetracker.service.api.TaskService;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,11 @@ public class TaskServiceImpl implements TaskService {
         if(taskDto.getTitle() != null) {
             Task task = taskRepository.save(TaskMapper.personDtoToPerson(taskDto));
             log.info("Task was successfully created: " + task);
+
+            if(taskDto.getAutoOpening()) {
+                startTask(task.getId());
+            }
+
             return task;
         } else {
             throw new NotCorrectDataException("Task wasn't created. Wrong input data");
@@ -89,12 +96,14 @@ public class TaskServiceImpl implements TaskService {
 
             task.setFinishedAt(LocalTime.now());
             Duration duration = Duration.between(task.getStartedAt(), LocalTime.now());
-            task.setSpentTime(String.format("%s:%s:%s", duration.toHours(), duration.toMinutes(), duration.toSeconds() % 60));
+            task.setSpentTime(
+                String.format("%s:%s:%s", duration.toHours(), duration.toMinutes(), duration.toSeconds() % 60));
             task.setStatus(Status.FINISHED.getName());
 
             task = taskRepository.save(task);
-            log.info(String.format("Task with id= %s tracking has been completed at %s. Time was spent: %s", task.getId(),
-                task.getStartedAt(), task.getSpentTime()));
+            log.info(
+                String.format("Task with id= %s tracking has been completed at %s. Time was spent: %s", task.getId(),
+                    task.getStartedAt(), task.getSpentTime()));
 
             return task;
         } else {
@@ -103,13 +112,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void autoClose() {
-
+    public List<Task> getTasksByStatus(Status status) {
+        return taskRepository.findAllByStatus(status.getName());
     }
 
     @Override
     public List<Task> getAllTask() {
-        return null;
+        return taskRepository.findAll();
     }
 
     @Override
@@ -122,7 +131,20 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(Long taskId) {
+    public void deleteAllFinishedTasks() {
+        log.info("Delete all finished tasks process started: ");
+        getTasksByStatus(Status.FINISHED).forEach(task->deleteTask(task.getId()));
+    }
 
+    @Override
+    public void deleteTask(Long taskId) {
+        taskRepository.delete(getTaskById(taskId));
+        log.info(String.format("Task with id = %s was deleted",taskId));
+    }
+
+    @Scheduled(cron = "0 59 23 * * *")
+    public void autoClose() {
+        log.info("Auto close process started: ");
+        getTasksByStatus(Status.IN_PROGRESS).forEach(task->finishedTask(task.getId()));
     }
 }
