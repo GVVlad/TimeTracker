@@ -1,4 +1,4 @@
-package ua.hryshko.timetracker.service.impl;
+package ua.hryshko.timetracker.service;
 
 import java.time.Duration;
 import java.time.LocalTime;
