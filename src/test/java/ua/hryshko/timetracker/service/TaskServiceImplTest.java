@@ -23,6 +23,7 @@ import ua.hryshko.timetracker.model.dto.TaskDto;
 import ua.hryshko.timetracker.model.dto.UpdateTaskDto;
 import ua.hryshko.timetracker.model.entity.Task;
 import ua.hryshko.timetracker.repository.TaskRepository;
+import ua.hryshko.timetracker.service.impl.TaskServiceImpl;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
