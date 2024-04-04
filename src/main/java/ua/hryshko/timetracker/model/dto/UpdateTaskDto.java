@@ -1,9 +1,10 @@
 package ua.hryshko.timetracker.model.dto;
 
-import java.time.LocalTime;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class UpdateTaskDto {
     private Long taskId;
     private String title;
