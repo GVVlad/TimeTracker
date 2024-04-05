@@ -38,7 +38,7 @@ public class TaskController {
         @ApiResponse(responseCode = "404", description = "Task's data incorrect"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping(value = "update-task")
+    @PostMapping(value = "/update-task")
     public ResponseEntity<Task> updateTask(@RequestBody UpdateTaskDto updateTaskDto) {
         return ResponseEntity.ok(taskService.updateTask(updateTaskDto));
     }
@@ -48,7 +48,7 @@ public class TaskController {
         @ApiResponse(responseCode = "404", description = "Task's data incorrect"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping(value = "start-task-tracking")
+    @PostMapping(value = "/start-task-tracking")
     public ResponseEntity<Task> startTracking(@RequestParam("taskId")Long taskId) {
         return ResponseEntity.ok( taskService.startTask(taskId));
     }
@@ -58,7 +58,7 @@ public class TaskController {
         @ApiResponse(responseCode = "404", description = "Task's data incorrect"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping(value = "finish-task-tracking")
+    @PostMapping(value = "/finish-task-tracking")
     public ResponseEntity<Task> finishedTracking(@RequestParam("taskId")Long taskId) {
         return ResponseEntity.ok(taskService.finishedTask(taskId));
     }
@@ -68,7 +68,7 @@ public class TaskController {
         @ApiResponse(responseCode = "404", description = "Task's data incorrect"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @DeleteMapping(value = "delete-task")
+    @DeleteMapping(value = "/delete-task")
     public ResponseEntity<Void> deleteTask(@RequestParam("taskId")Long taskId) {
         taskService.deleteTask(taskId);
         return ResponseEntity.ok().build();
@@ -79,7 +79,7 @@ public class TaskController {
         @ApiResponse(responseCode = "404", description = "Task's data incorrect"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @DeleteMapping(value = "delete-finished-task")
+    @DeleteMapping(value = "/delete-finished-task")
     public ResponseEntity<Void> deleteFinishedTasks() {
         taskService.deleteAllFinishedTasks();
         return ResponseEntity.ok().build();

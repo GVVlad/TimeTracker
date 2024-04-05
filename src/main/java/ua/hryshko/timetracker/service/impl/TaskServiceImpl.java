@@ -58,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
                 task.getDescription()));
         }
         if(updateTaskDto.getStatus() != null) {
-            task.setStatus(updateTaskDto.getStatus());
+            task.setStatus(Status.valueOf(updateTaskDto.getStatus()).getName());
             log.info(String.format("Task's status with id = %s was updated. New status: %s", task.getId(),
                 task.getStatus()));
         }
