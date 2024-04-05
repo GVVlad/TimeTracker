@@ -11,8 +11,8 @@
     <groupId>ua.hryshko</groupId>
     <artifactId>TimeTrecker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>TimeTrecker</name>
-    <description>TimeTrecker</description>
+    <name>TimeTracker</name>
+    <description>TimeTracker</description>
     <properties>
         <java.version>17</java.version>
     </properties>

@@ -102,7 +102,7 @@ class TaskControllerTest {
 
     @Test
     @DisplayName("finishedTracking should return StatusCode = OK")
-    public void testDeleteTrackingTask() {
+    public void testDeleteTask() {
         ResponseEntity<Void> responseEntity = testInstance.deleteTask(RIGHT_TASK_ID);
 
         assertNotNull(responseEntity);
@@ -113,7 +113,7 @@ class TaskControllerTest {
 
     @Test
     @DisplayName("finishedTracking should return StatusCode = OK")
-    public void testDeleteFinishedTrackingTask() {
+    public void testDeleteFinishedTasks() {
         ResponseEntity<Void> responseEntity = testInstance.deleteFinishedTasks();
 
         assertNotNull(responseEntity);
