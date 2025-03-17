@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum Status {
 
     CREATED("Created"),
@@ -12,6 +11,10 @@ public enum Status {
     FINISHED("Finished");
 
     private final String name;
+
+    Status(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
