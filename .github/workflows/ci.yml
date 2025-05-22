@@ -59,3 +59,4 @@ jobs:
             -Dsonar.projectKey=GVVlad_TimeTracker
             -Dsonar.organization=gvvlad
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.java.binaries=target/classes
