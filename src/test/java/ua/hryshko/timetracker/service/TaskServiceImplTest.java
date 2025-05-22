@@ -40,7 +40,7 @@ class TaskServiceImplTest {
     private static final Long RIGHT_TASK_ID = 1L;
     private static final Long WRONG_TASK_ID = 100L;
     private static final LocalDateTime CREATED_TIME = LocalDateTime.now();
-    private static final String STATUS = Status.CREATED.getName();
+    private static final String STATUS = Status.CREATED.getName().toUpperCase();
     private static final List<Task> tasks = new ArrayList<>();
 
     @Spy
@@ -109,7 +109,7 @@ class TaskServiceImplTest {
         when(taskRepository.findById(any())).thenReturn(Optional.of(task));
         when(taskRepository.save(any())).thenReturn(task);
 
-        Task startedTask = testInstance.startTask(1L);
+        Task startedTask = testInstance.startTask(task.getId());
 
         Assertions.assertEquals(task, startedTask);
         Assertions.assertEquals(Status.IN_PROGRESS.getName(), startedTask.getStatus());

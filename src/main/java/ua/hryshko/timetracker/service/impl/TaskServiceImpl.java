@@ -76,7 +76,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task startTask(Long taskId) {
         Task task = getTaskById(taskId);
-        if(task.getStatus().equals(Status.CREATED.getName()) && task.getStartedAt() == null) {
+        if(task.getStatus().equals(Status.CREATED.getName().toUpperCase()) && task.getStartedAt() == null) {
             task.setStartedAt(LocalTime.now());
             task.setStatus(Status.IN_PROGRESS.getName());
 
