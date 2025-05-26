@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-tracker-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: time-tracker-app
+  template:
+    metadata:
+      labels:
+        app: time-tracker-app
+    spec:
+      containers:
+        - name: time-tracker-app
+          image: time-tracker-app:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/postgres"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: time-tracker-app
+spec:
+  selector:
+    app: time-tracker-app
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort
